@@ -9,4 +9,4 @@ socket基础学习
 
 # 断开连接
 
-![](./littlechat/screenshot-20220911-123554.png)(./littlechat/screenshot-20220910-224839.png)
+![./littlechat/screenshot-20220911-123554.png](./littlechat/screenshot-20220911-123554.png)
