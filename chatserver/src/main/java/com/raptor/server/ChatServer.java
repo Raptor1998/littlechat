@@ -5,6 +5,7 @@ import com.raptor.connect.ServerConnectClientThreadManager;
 import com.raptor.entity.Message;
 import com.raptor.entity.MessageType;
 import com.raptor.entity.User;
+import com.raptor.service.SendToAllService;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -23,19 +24,22 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChatServer {
 
     private ServerSocket serverSocket = null;
-    private static ConcurrentHashMap<String,User> userMap= new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, User> userMap = new ConcurrentHashMap<>();
 
     static {
-        userMap.put("raptor",new User("raptor","123"));
-        userMap.put("bytedance",new User("bytedance","123"));
-        userMap.put("npc3",new User("npc3","123"));
-        userMap.put("npc1",new User("npc1","123"));
-        userMap.put("npc2",new User("npc2","123"));
+        userMap.put("raptor", new User("raptor", "123"));
+        userMap.put("bytedance", new User("bytedance", "123"));
+        userMap.put("npc3", new User("npc3", "123"));
+        userMap.put("npc1", new User("npc1", "123"));
+        userMap.put("npc2", new User("npc2", "123"));
     }
+
     public ChatServer() {
         System.out.println("server is ready");
         try {
             serverSocket = new ServerSocket(9999);
+            //启动推送线程
+            new Thread(new SendToAllService()).start();
             while (true) {
                 //持续监听
                 Socket socket = serverSocket.accept();
@@ -46,7 +50,7 @@ public class ChatServer {
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 Message message = new Message();
                 //验证用户名密码
-                if (checkUser(user.getUserId(),user.getPassword())) {
+                if (checkUser(user.getUserId(), user.getPassword())) {
                     message.setMsgType(MessageType.MESSAGE_LOGIN_SUCCESS);
                     //返回客户端信息
                     oos.writeObject(message);
@@ -74,14 +78,14 @@ public class ChatServer {
         }
     }
 
-    public boolean checkUser(String userId,String password){
+    public boolean checkUser(String userId, String password) {
         User user = userMap.get(userId);
-        if (user == null){
+        if (user == null) {
             return false;
         }
-        if (user.getPassword().equals(password)){
+        if (user.getPassword().equals(password)) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
