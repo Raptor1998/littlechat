@@ -43,7 +43,6 @@ public class ClientView {
                             key = Utility.readString(1);
                             switch (key) {
                                 case "1":
-                                    System.out.println("在线用户：");
                                     clientService.onlineList();
                                     break;
                                 case "2":
@@ -56,8 +55,8 @@ public class ClientView {
                                     System.out.println("发送文件：");
                                     break;
                                 case "9":
-                                    System.out.println("退出系统");
                                     loop = false;
+                                    clientService.logout();
                                     break;
                                 default:
                                     System.out.println("error key");

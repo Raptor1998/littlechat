@@ -30,7 +30,7 @@ public class ServerConnectClientThread extends Thread {
                 System.out.println("服务端线程，保持与客户端通信 " + userId);
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 Message message = (Message) ois.readObject();
-                if(message.getMsgType().equals(MessageType.MESSAGE_GET_ONLINE)){
+                if (message.getMsgType().equals(MessageType.MESSAGE_GET_ONLINE)) {
                     System.out.println(message.getSender() + " 用户想要获取在线用户");
                     String onlineUsers = ServerConnectClientThreadManager.getOnlineUsers();
                     Message onlineUsersList = new Message();
@@ -40,7 +40,14 @@ public class ServerConnectClientThread extends Thread {
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     System.out.println("当前在线的用户：" + onlineUsers);
                     oos.writeObject(onlineUsersList);
-                }else {
+                }
+                if (message.getMsgType().equals(MessageType.MESSAGE_CLIENT_EXIT)) {
+                    System.out.println(userId + " 退出");
+                    ServerConnectClientThreadManager.remove(message.getSender());
+                    socket.close();
+                    //当socket关闭之后   退出while循环
+                    break;
+                } else {
 
                 }
             } catch (Exception e) {

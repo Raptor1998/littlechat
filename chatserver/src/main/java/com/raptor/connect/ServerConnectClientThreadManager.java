@@ -20,12 +20,15 @@ public class ServerConnectClientThreadManager {
         return map.get(userId);
     }
 
+    public static void remove(String userId) {
+        map.remove(userId);
+    }
 
     public static String getOnlineUsers() {
         StringBuilder stringBuilder = new StringBuilder();
         Iterator<String> iterator = map.keySet().iterator();
-        while (iterator.hasNext()){
-            stringBuilder.append(iterator.next() + " " );
+        while (iterator.hasNext()) {
+            stringBuilder.append(iterator.next() + " ");
         }
         return stringBuilder.toString();
     }

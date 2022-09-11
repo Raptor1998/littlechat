@@ -67,4 +67,21 @@ public class ClientService {
         }
 
     }
+
+    public void logout() {
+        try {
+            Message message = new Message();
+            message.setMsgType(MessageType.MESSAGE_CLIENT_EXIT);
+            message.setSender(user.getUserId());
+            ObjectOutputStream oos = new ObjectOutputStream(ClientConnectServerThreadManager.getClientConnectServerThread(user.getUserId()).getSocket().getOutputStream());
+
+            oos.writeObject(message);
+
+            System.out.println(user.getUserId() + " 退出系统");
+            //结束当前线程
+            System.exit(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
