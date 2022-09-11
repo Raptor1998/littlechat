@@ -44,6 +44,7 @@ public class ClientView {
                             switch (key) {
                                 case "1":
                                     System.out.println("在线用户：");
+                                    clientService.onlineList();
                                     break;
                                 case "2":
                                     System.out.println("群发消息：");

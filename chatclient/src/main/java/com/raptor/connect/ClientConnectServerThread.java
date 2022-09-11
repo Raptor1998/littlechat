@@ -1,6 +1,7 @@
 package com.raptor.connect;
 
 import com.raptor.entity.Message;
+import com.raptor.entity.MessageType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -27,6 +28,15 @@ public class ClientConnectServerThread extends Thread {
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 Message message = (Message) ois.readObject();
 
+                if (message.getMsgType().equals(MessageType.MESSAGE_GET_RETURN_ONLINE)){
+                    System.out.println("正在请求所有在线用户列表");
+                    String[] onlineUsers = message.getContent().split(" ");
+                    for (int i = 0; i < onlineUsers.length; i++) {
+                        System.out.println("用户：" + onlineUsers[i]);
+                    }
+                }else {
+
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

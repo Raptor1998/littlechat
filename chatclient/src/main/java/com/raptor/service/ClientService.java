@@ -5,6 +5,7 @@ import com.raptor.connect.ClientConnectServerThreadManager;
 import com.raptor.entity.Message;
 import com.raptor.entity.MessageType;
 import com.raptor.entity.User;
+import sun.java2d.OSXSurfaceData;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -48,5 +49,22 @@ public class ClientService {
             e.printStackTrace();
         }
         return flag;
+    }
+
+
+    public void onlineList() {
+        //发送message  获取在线用户
+
+        Message message = new Message();
+        message.setMsgType(MessageType.MESSAGE_GET_ONLINE);
+        message.setSender(user.getUserId());
+        try {
+            //获取当前用户对应的线程对象
+            ObjectOutputStream oos = new ObjectOutputStream(ClientConnectServerThreadManager.getClientConnectServerThread(user.getUserId()).getSocket().getOutputStream());
+            oos.writeObject(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

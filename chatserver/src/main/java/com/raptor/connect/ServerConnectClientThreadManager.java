@@ -1,6 +1,7 @@
 package com.raptor.connect;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * @author 陈文豪(chenwenhao.0401 @ bytedance.com)
@@ -20,4 +21,12 @@ public class ServerConnectClientThreadManager {
     }
 
 
+    public static String getOnlineUsers() {
+        StringBuilder stringBuilder = new StringBuilder();
+        Iterator<String> iterator = map.keySet().iterator();
+        while (iterator.hasNext()){
+            stringBuilder.append(iterator.next() + " " );
+        }
+        return stringBuilder.toString();
+    }
 }
