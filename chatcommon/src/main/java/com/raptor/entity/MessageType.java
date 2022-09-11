@@ -15,6 +15,7 @@ public interface MessageType {
     String MESSAGE_GET_RETURN_ONLINE = "5";
 
     String MESSAGE_GROUP_MESSAGE  = "7";
+    String MESSAGE_FILE_MESSAGE  = "8";
     //客户端请求退出
     String MESSAGE_CLIENT_EXIT = "6";
 }

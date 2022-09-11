@@ -73,8 +73,10 @@ public class ServerConnectClientThread extends Thread {
                             oos.writeObject(message);
                         }
                     }
-                } else {
-
+                } else if (message.getMsgType().equals(MessageType.MESSAGE_FILE_MESSAGE)) {
+                    System.out.println(message.getSender() + " 给 " + message.getGetter() + "发送文件：" + message.getSrc() + " 到 " + message.getDest());
+                    ObjectOutputStream oos = new ObjectOutputStream(ServerConnectClientThreadManager.getServerConnectClientThread(message.getGetter()).getSocket().getOutputStream());
+                    oos.writeObject(message);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

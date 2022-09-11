@@ -2,7 +2,10 @@ package com.raptor.view;
 
 import com.raptor.service.ChatService;
 import com.raptor.service.ClientService;
+import com.raptor.service.FileService;
 import com.raptor.util.Utility;
+
+import java.io.File;
 
 /**
  * @author 陈文豪(chenwenhao.0401 @ bytedance.com)
@@ -17,6 +20,8 @@ public class ClientView {
     private ClientService clientService = new ClientService();
 
     private ChatService chatService = new ChatService();
+
+    private FileService fileService = new FileService();
 
     public void mainView() {
         while (loop) {
@@ -51,7 +56,7 @@ public class ClientView {
                                 case "2":
                                     System.out.println("请输入群发消息：");
                                     String msg = Utility.readString(100);
-                                    chatService.sendGroupMessage(msg,userId);
+                                    chatService.sendGroupMessage(msg, userId);
                                     break;
                                 case "3":
                                     System.out.println("输入聊天对象：");
@@ -59,11 +64,18 @@ public class ClientView {
                                     System.out.println("请输入想说的话：");
                                     String content = Utility.readString(100);
                                     //发送消息
-                                    chatService.sendMessage(content,userId, getterId );
+                                    chatService.sendMessage(content, userId, getterId);
                                     System.out.println("私聊消息：");
                                     break;
                                 case "4":
-                                    System.out.println("发送文件：");
+                                    System.out.println("请输入接收文件的对象");
+                                    String fileGetterId = Utility.readString(50);
+                                    System.out.println("请输入发送文件路径：");
+                                    String sendPath = Utility.readString(100);
+
+                                    System.out.println("请输入发送文件存储到的路径：");
+                                    String savePath = Utility.readString(100);
+                                    fileService.sendFile(sendPath, savePath, userId, fileGetterId);
                                     break;
                                 case "9":
                                     loop = false;

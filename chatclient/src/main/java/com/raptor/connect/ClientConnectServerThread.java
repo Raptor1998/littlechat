@@ -3,6 +3,8 @@ package com.raptor.connect;
 import com.raptor.entity.Message;
 import com.raptor.entity.MessageType;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -38,6 +40,12 @@ public class ClientConnectServerThread extends Thread {
                     System.out.println(message.getSendTime() + " 收到来自 " + message.getSender() + " 的消息：" + message.getContent());
                 } else if (message.getMsgType().equals(MessageType.MESSAGE_GROUP_MESSAGE)) {
                     System.out.println(message.getSender() + "对所有人说：" + message.getContent());
+                } else if (message.getMsgType().equals(MessageType.MESSAGE_FILE_MESSAGE)) {
+                    System.out.println("收到来自" + message.getSender() + " 的文件" + message.getSrc());
+                    FileOutputStream fileOutputStream = new FileOutputStream(message.getDest());
+                    fileOutputStream.write(message.getFileBytes());
+                    fileOutputStream.close();
+                    System.out.println(message.getGetter() + "成功保存到" + message.getDest());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -16,6 +16,45 @@ public class Message implements Serializable {
     private String content;
     private String msgType;
 
+    private byte[] fileBytes;
+    private int fileLen = 0;
+    //存储到哪
+    private String dest;
+    //目录
+    private String src;
+
+    public byte[] getFileBytes() {
+        return fileBytes;
+    }
+
+    public void setFileBytes(byte[] fileBytes) {
+        this.fileBytes = fileBytes;
+    }
+
+    public int getFileLen() {
+        return fileLen;
+    }
+
+    public void setFileLen(int fileLen) {
+        this.fileLen = fileLen;
+    }
+
+    public String getDest() {
+        return dest;
+    }
+
+    public void setDest(String dest) {
+        this.dest = dest;
+    }
+
+    public String getSrc() {
+        return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
+    }
+
     public Message() {
     }
 
@@ -34,6 +73,7 @@ public class Message implements Serializable {
     public void setMsgType(String msgType) {
         this.msgType = msgType;
     }
+
     public String getSender() {
         return sender;
     }
