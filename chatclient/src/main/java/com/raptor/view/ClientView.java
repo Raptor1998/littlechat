@@ -1,5 +1,6 @@
 package com.raptor.view;
 
+import com.raptor.service.ChatService;
 import com.raptor.service.ClientService;
 import com.raptor.util.Utility;
 
@@ -14,6 +15,8 @@ public class ClientView {
     private String key = "";
 
     private ClientService clientService = new ClientService();
+
+    private ChatService chatService = new ChatService();
 
     public void mainView() {
         while (loop) {
@@ -30,7 +33,7 @@ public class ClientView {
                     String password = Utility.readString(50);
                     //去服务器验证结果
 
-                    if (clientService.checkUser(userId,password)) {
+                    if (clientService.checkUser(userId, password)) {
                         System.out.println("welcome user:" + userId);
                         while (loop) {
                             System.out.println("=========little chat for user:" + userId + "=======");
@@ -49,6 +52,12 @@ public class ClientView {
                                     System.out.println("群发消息：");
                                     break;
                                 case "3":
+                                    System.out.println("输入聊天对象：");
+                                    String getterId = Utility.readString(50);
+                                    System.out.println("请输入想说的话：");
+                                    String content = Utility.readString(100);
+                                    //发送消息
+                                    chatService.sendMessage(content,userId, getterId );
                                     System.out.println("私聊消息：");
                                     break;
                                 case "4":

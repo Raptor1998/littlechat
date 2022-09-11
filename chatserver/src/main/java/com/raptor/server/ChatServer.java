@@ -51,7 +51,6 @@ public class ChatServer {
                     //返回客户端信息
                     oos.writeObject(message);
                     //创建一个线程和客户端保持通信
-
                     ServerConnectClientThread serverConnectClientThread = new ServerConnectClientThread(socket, user.getUserId());
                     serverConnectClientThread.start();
                     ServerConnectClientThreadManager.addServerConnectClientThread(user.getUserId(), serverConnectClientThread);

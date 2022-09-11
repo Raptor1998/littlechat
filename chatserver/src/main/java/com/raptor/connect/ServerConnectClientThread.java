@@ -23,6 +23,10 @@ public class ServerConnectClientThread extends Thread {
         this.userId = userId;
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
+
     @Override
     public void run() {
         while (true) {
@@ -40,13 +44,19 @@ public class ServerConnectClientThread extends Thread {
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     System.out.println("当前在线的用户：" + onlineUsers);
                     oos.writeObject(onlineUsersList);
-                }
-                if (message.getMsgType().equals(MessageType.MESSAGE_CLIENT_EXIT)) {
+                } else if (message.getMsgType().equals(MessageType.MESSAGE_CLIENT_EXIT)) {
                     System.out.println(userId + " 退出");
                     ServerConnectClientThreadManager.remove(message.getSender());
                     socket.close();
                     //当socket关闭之后   退出while循环
                     break;
+                } else if (message.getMsgType().equals(MessageType.MESSAGE_COMM_MES)) {
+                    //消息转发
+                    System.out.println(message.getSendTime() + " " + message.getSender() + " 对 " + message.getGetter()+ " 说：" + message.getContent());
+                    ServerConnectClientThread serverConnectClientThread = ServerConnectClientThreadManager.getServerConnectClientThread(message.getGetter());
+                    ObjectOutputStream oos = new ObjectOutputStream(serverConnectClientThread.getSocket().getOutputStream());
+                    //如果用户不在线，则保存到数据库，可实现离线留言
+                    oos.writeObject(message);
                 } else {
 
                 }

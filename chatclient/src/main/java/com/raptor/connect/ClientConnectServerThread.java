@@ -28,13 +28,15 @@ public class ClientConnectServerThread extends Thread {
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 Message message = (Message) ois.readObject();
 
-                if (message.getMsgType().equals(MessageType.MESSAGE_GET_RETURN_ONLINE)){
+                if (message.getMsgType().equals(MessageType.MESSAGE_GET_RETURN_ONLINE)) {
                     System.out.println("正在请求所有在线用户列表");
                     String[] onlineUsers = message.getContent().split(" ");
                     for (int i = 0; i < onlineUsers.length; i++) {
                         System.out.println("用户：" + onlineUsers[i]);
                     }
-                }else {
+                } else if (message.getMsgType().equals(MessageType.MESSAGE_COMM_MES)) {
+                    System.out.println(message.getSendTime() + " 收到来自 " + message.getSender() + " 的消息：" + message.getContent());
+                } else {
 
                 }
             } catch (Exception e) {
