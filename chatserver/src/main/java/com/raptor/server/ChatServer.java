@@ -12,7 +12,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,13 +27,17 @@ public class ChatServer {
 
     private ServerSocket serverSocket = null;
     private static ConcurrentHashMap<String, User> userMap = new ConcurrentHashMap<>();
-
+    private static ConcurrentHashMap<String, List<Message>> offlineMessage = new ConcurrentHashMap<>();
     static {
         userMap.put("raptor", new User("raptor", "123"));
         userMap.put("bytedance", new User("bytedance", "123"));
         userMap.put("npc3", new User("npc3", "123"));
         userMap.put("npc1", new User("npc1", "123"));
         userMap.put("npc2", new User("npc2", "123"));
+    }
+
+    public static ConcurrentHashMap<String, List<Message>> getOfflineMessage() {
+        return offlineMessage;
     }
 
     public ChatServer() {
@@ -58,6 +64,16 @@ public class ChatServer {
                     ServerConnectClientThread serverConnectClientThread = new ServerConnectClientThread(socket, user.getUserId());
                     serverConnectClientThread.start();
                     ServerConnectClientThreadManager.addServerConnectClientThread(user.getUserId(), serverConnectClientThread);
+                    List<Message> messages = offlineMessage.get(user.getUserId());
+                    if (messages != null){
+                        System.out.println(user.getUserId() + " 存在离线消息");
+                        for (Message m : messages) {
+                            System.out.println("正在补发：" + m.getSender() + " " + m.getGetter() + " " + m.getContent());
+                            ObjectOutputStream offlineoos = new ObjectOutputStream(ServerConnectClientThreadManager.getServerConnectClientThread(user.getUserId()).getSocket().getOutputStream());
+                            //如果用户不在线，则保存到数据库，可实现离线留言
+                            offlineoos.writeObject(m);
+                        }
+                    }
                 } else {
                     //登录失败
                     System.out.println(user.getUserId() + "用户名或密码错误");

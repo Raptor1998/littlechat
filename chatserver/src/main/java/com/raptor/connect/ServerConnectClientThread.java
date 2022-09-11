@@ -2,6 +2,7 @@ package com.raptor.connect;
 
 import com.raptor.entity.Message;
 import com.raptor.entity.MessageType;
+import com.raptor.server.ChatServer;
 import com.sun.security.ntlm.Server;
 import sun.java2d.OSXSurfaceData;
 
@@ -9,8 +10,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author 陈文豪(chenwenhao.0401 @ bytedance.com)
@@ -56,11 +59,20 @@ public class ServerConnectClientThread extends Thread {
                     break;
                 } else if (message.getMsgType().equals(MessageType.MESSAGE_COMM_MES)) {
                     //消息转发
-                    System.out.println(message.getSendTime() + " " + message.getSender() + " 对 " + message.getGetter() + " 说：" + message.getContent());
                     ServerConnectClientThread serverConnectClientThread = ServerConnectClientThreadManager.getServerConnectClientThread(message.getGetter());
-                    ObjectOutputStream oos = new ObjectOutputStream(serverConnectClientThread.getSocket().getOutputStream());
-                    //如果用户不在线，则保存到数据库，可实现离线留言
-                    oos.writeObject(message);
+                    if (serverConnectClientThread == null){
+                        System.out.println(message.getGetter() + "不在线");
+                        List<Message> messages = ChatServer.getOfflineMessage().get(message.getGetter());
+                        if (messages == null){
+                            messages = new ArrayList<>();
+                        }
+                        messages.add(message);
+                        ChatServer.getOfflineMessage().put(message.getGetter(),messages);
+                    }else {
+                        System.out.println(message.getSendTime() + " " + message.getSender() + " 对 " + message.getGetter() + " 说：" + message.getContent());
+                        ObjectOutputStream oos = new ObjectOutputStream(serverConnectClientThread.getSocket().getOutputStream());
+                        oos.writeObject(message);
+                    }
                 } else if (message.getMsgType().equals(MessageType.MESSAGE_GROUP_MESSAGE)) {
                     //群发消息
                     System.out.println(message.getSender() + "对所有人说：" + message.getContent());
