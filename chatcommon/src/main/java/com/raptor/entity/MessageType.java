@@ -13,6 +13,8 @@ public interface MessageType {
     String MESSAGE_COMM_MES = "3";
     String MESSAGE_GET_ONLINE = "4";
     String MESSAGE_GET_RETURN_ONLINE = "5";
+
+    String MESSAGE_GROUP_MESSAGE  = "7";
     //客户端请求退出
     String MESSAGE_CLIENT_EXIT = "6";
 }

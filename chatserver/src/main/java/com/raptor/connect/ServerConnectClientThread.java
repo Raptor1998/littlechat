@@ -2,11 +2,15 @@ package com.raptor.connect;
 
 import com.raptor.entity.Message;
 import com.raptor.entity.MessageType;
+import com.sun.security.ntlm.Server;
+import sun.java2d.OSXSurfaceData;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * @author 陈文豪(chenwenhao.0401 @ bytedance.com)
@@ -52,11 +56,23 @@ public class ServerConnectClientThread extends Thread {
                     break;
                 } else if (message.getMsgType().equals(MessageType.MESSAGE_COMM_MES)) {
                     //消息转发
-                    System.out.println(message.getSendTime() + " " + message.getSender() + " 对 " + message.getGetter()+ " 说：" + message.getContent());
+                    System.out.println(message.getSendTime() + " " + message.getSender() + " 对 " + message.getGetter() + " 说：" + message.getContent());
                     ServerConnectClientThread serverConnectClientThread = ServerConnectClientThreadManager.getServerConnectClientThread(message.getGetter());
                     ObjectOutputStream oos = new ObjectOutputStream(serverConnectClientThread.getSocket().getOutputStream());
                     //如果用户不在线，则保存到数据库，可实现离线留言
                     oos.writeObject(message);
+                } else if (message.getMsgType().equals(MessageType.MESSAGE_GROUP_MESSAGE)) {
+                    //群发消息
+                    System.out.println(message.getSender() + "对所有人说：" + message.getContent());
+                    HashMap<String, ServerConnectClientThread> map = ServerConnectClientThreadManager.getMap();
+                    Iterator<String> iterator = map.keySet().iterator();
+                    while (iterator.hasNext()) {
+                        String onlineId = iterator.next().toString();
+                        if (!onlineId.equals(userId)) {
+                            ObjectOutputStream oos = new ObjectOutputStream(map.get(onlineId).getSocket().getOutputStream());
+                            oos.writeObject(message);
+                        }
+                    }
                 } else {
 
                 }

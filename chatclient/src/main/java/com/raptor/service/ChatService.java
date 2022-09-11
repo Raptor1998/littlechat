@@ -17,6 +17,7 @@ import java.util.Date;
  * @created 2022/9/11  12:55
  */
 public class ChatService {
+    //私聊消息
     public void sendMessage(String content, String senderId, String getterId) {
         Message message = new Message();
         message.setMsgType(MessageType.MESSAGE_COMM_MES);
@@ -25,6 +26,23 @@ public class ChatService {
         message.setGetter(getterId);
         message.setSendTime(new Date().toString());
         System.out.println(senderId + " 对 " + getterId + "说： " + content);
+        try {
+            ClientConnectServerThread clientConnectServerThread = ClientConnectServerThreadManager.getClientConnectServerThread(senderId);
+            Socket socket = clientConnectServerThread.getSocket();
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            oos.writeObject(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    //群聊消息
+    public void sendGroupMessage(String msg, String senderId) {
+        Message message = new Message();
+        message.setMsgType(MessageType.MESSAGE_GROUP_MESSAGE);
+        message.setContent(msg);
+        message.setSender(senderId);
+        message.setSendTime(new Date().toString());
+        System.out.println(senderId + " 对所有人说： " + msg);
         try {
             ClientConnectServerThread clientConnectServerThread = ClientConnectServerThreadManager.getClientConnectServerThread(senderId);
             Socket socket = clientConnectServerThread.getSocket();

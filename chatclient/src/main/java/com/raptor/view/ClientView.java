@@ -49,7 +49,9 @@ public class ClientView {
                                     clientService.onlineList();
                                     break;
                                 case "2":
-                                    System.out.println("群发消息：");
+                                    System.out.println("请输入群发消息：");
+                                    String msg = Utility.readString(100);
+                                    chatService.sendGroupMessage(msg,userId);
                                     break;
                                 case "3":
                                     System.out.println("输入聊天对象：");

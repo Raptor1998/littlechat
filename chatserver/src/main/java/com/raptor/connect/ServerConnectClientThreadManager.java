@@ -15,6 +15,9 @@ public class ServerConnectClientThreadManager {
         map.put(userId, serverConnectClientThread);
     }
 
+    public static HashMap<String, ServerConnectClientThread> getMap() {
+        return map;
+    }
 
     public static ServerConnectClientThread getServerConnectClientThread(String userId) {
         return map.get(userId);
